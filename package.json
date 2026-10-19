@@ -1,0 +1,20 @@
+{
+  "name": "specforgex",
+  "version": "1.0.0",
+  "private": true,
+  "description": "文档驱动 AI 开发工作流（SpecForge V3 改造）：14 个分层 Skill + 自检与安装脚本",
+  "license": "UNLICENSED",
+  "type": "module",
+  "engines": {
+    "node": ">=18"
+  },
+  "scripts": {
+    "check": "node scripts/check-skills.mjs",
+    "test": "node scripts/check-skills.mjs",
+    "install-skills": "node scripts/install-skills.mjs"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/OldJie1017/SpecForgeX.git"
+  }
+}

@@ -1,0 +1,19 @@
+# 操作系统
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# 编辑器
+.vscode/
+.idea/
+
+# 依赖与日志
+node_modules/
+*.log
+
+# install-skills.mjs --force 覆盖前生成的备份（与目标 skills 目录同级）
+_skills_backup_*/
+
+# 环境变量（技能包本身不含，防止误提交用户项目的密钥）
+.env
+.env.*

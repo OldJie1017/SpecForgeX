@@ -1,0 +1,51 @@
+name: check
+
+# 这个仓库最怕的是"改了 A 忘了同步 B"——所有一致性检查都写在 scripts/check-skills.mjs 里，
+# 这里只负责让它在每次 push / PR 上自动跑，不再依赖人记得手动执行。
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  check-skills:
+    name: check-skills (node ${{ matrix.node }})
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        node: [18, 20, 22]
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: ${{ matrix.node }}
+
+      # 无依赖，直接跑
+      - name: 一致性自检
+        run: node scripts/check-skills.mjs
+
+      - name: 安装脚本演练（应是纯空目标，全部"新增"）
+        run: node scripts/install-skills.mjs --dry-run -t "$RUNNER_TEMP/skills"
+
+      - name: 安装脚本真实执行
+        run: node scripts/install-skills.mjs -t "$RUNNER_TEMP/skills"
+
+      - name: 重复安装必须幂等（第二次应全部"跳过"）
+        run: node scripts/install-skills.mjs -t "$RUNNER_TEMP/skills" | grep -q "新增 0"
+
+      - name: 机制文件在安装产物中逐字一致
+        run: |
+          set -euo pipefail
+          cmp "specs/CONSTITUTION.md" \
+              "$RUNNER_TEMP/skills/project-requirements-clarification/assets/constitution-template.md"
+          cmp "specs/TOOLCHAIN.md" \
+              "$RUNNER_TEMP/skills/project-requirements-clarification/assets/toolchain-template.md"
+
+      - name: 工作区不应被改动
+        run: git diff --exit-code

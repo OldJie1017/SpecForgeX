@@ -1,0 +1,18 @@
+# 统一行尾为 LF：技能包会被复制到 Linux/macOS 上的 skills 目录，
+# 而 check-skills.mjs 会逐字比较机制文件与其分发副本，行尾不一致会造成假失败。
+* text=auto eol=lf
+
+# Windows 脚本保留 CRLF（如有）
+*.ps1 text eol=crlf
+*.bat text eol=crlf
+*.cmd text eol=crlf
+
+# 二进制文件不做行尾转换
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.webp binary
+*.ico binary
+*.pdf binary
+*.zip binary

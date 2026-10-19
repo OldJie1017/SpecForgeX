@@ -1,0 +1,115 @@
+{
+  "version": 1,
+  "comment": "SpecForgeX 技能包清单。新增/移动 Skill 时必须同步更新本文件，scripts/check-skills.mjs 会校验。",
+  "skills": [
+    {
+      "name": "project-requirements-clarification",
+      "layer": "project",
+      "kind": "step",
+      "step": 1,
+      "path": "skills/project/project-requirements-clarification",
+      "outputs": ["specs/CONSTITUTION.md", "specs/TOOLCHAIN.md"]
+    },
+    {
+      "name": "project-product-overview",
+      "layer": "project",
+      "kind": "step",
+      "step": 2,
+      "path": "skills/project/project-product-overview",
+      "outputs": ["specs/产品概述.md"]
+    },
+    {
+      "name": "project-tech-stack",
+      "layer": "project",
+      "kind": "step",
+      "step": 3,
+      "path": "skills/project/project-tech-stack",
+      "outputs": ["specs/技术栈.md"]
+    },
+    {
+      "name": "project-structure",
+      "layer": "project",
+      "kind": "step",
+      "step": 4,
+      "path": "skills/project/project-structure",
+      "outputs": ["specs/项目结构.md"]
+    },
+    {
+      "name": "project-dev-standards",
+      "layer": "project",
+      "kind": "step",
+      "step": 5,
+      "path": "skills/project/project-dev-standards",
+      "outputs": ["specs/开发规范.md"]
+    },
+    {
+      "name": "project-roadmap-planning",
+      "layer": "project",
+      "kind": "step",
+      "step": 6,
+      "path": "skills/project/project-roadmap-planning",
+      "outputs": ["specs/开发路线图.md"]
+    },
+    {
+      "name": "project-initialization",
+      "layer": "project",
+      "kind": "step",
+      "step": 7,
+      "path": "skills/project/project-initialization",
+      "outputs": ["docs/开发记录/初始化记录.md"]
+    },
+    {
+      "name": "feature-requirements-clarification",
+      "layer": "feature",
+      "kind": "flow",
+      "step": 1,
+      "path": "skills/feature/feature-requirements-clarification",
+      "outputs": ["specs/features/{功能名}/需求.md", "specs/features/{功能名}/开发日志.md"]
+    },
+    {
+      "name": "feature-tech-design",
+      "layer": "feature",
+      "kind": "flow",
+      "step": 2,
+      "path": "skills/feature/feature-tech-design",
+      "outputs": ["specs/features/{功能名}/技术方案.md"]
+    },
+    {
+      "name": "feature-task-planning",
+      "layer": "feature",
+      "kind": "flow",
+      "step": 3,
+      "path": "skills/feature/feature-task-planning",
+      "outputs": ["specs/features/{功能名}/任务规划.md"]
+    },
+    {
+      "name": "feature-implementation",
+      "layer": "feature",
+      "kind": "flow",
+      "step": 4,
+      "path": "skills/feature/feature-implementation",
+      "outputs": ["specs/features/{功能名}/reports/阶段{N}_完成报告.md"]
+    },
+    {
+      "name": "feature-review",
+      "layer": "feature",
+      "kind": "gate",
+      "path": "skills/feature/feature-review",
+      "outputs": ["specs/features/{功能名}/开发日志.md"]
+    },
+    {
+      "name": "feature-evolution",
+      "layer": "feature",
+      "kind": "change",
+      "path": "skills/feature/feature-evolution",
+      "outputs": ["specs/changes/CR-{编号}-{slug}/"]
+    },
+    {
+      "name": "bugfix-workflow",
+      "layer": "universal",
+      "kind": "standalone",
+      "path": "skills/universal/bugfix-workflow",
+      "outputs": ["docs/BUG修复文档/YYYYMMDD-HHMM-问题简述.md"]
+    }
+  ]
+}
