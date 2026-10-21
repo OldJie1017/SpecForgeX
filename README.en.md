@@ -29,15 +29,15 @@ A documentation-driven AI development workflow, rebuilt from [SpecForge](https:/
 | `feature-requirements-clarification` | Product partner | Digs out one feature's requirements across six dimensions (scenarios / flow / edge cases / rules / scope / quality) and produces Given-When-Then **acceptance criteria (AC)**. When you already wrote the requirement clearly it takes the **fast lane** (AC draft + assumption list); non-functional targets only enter AC when measurable — AC quality decides everything downstream | `specs/features/{feature}/需求.md` + initializes `开发日志.md` |
 | `feature-tech-design` | Technical partner | Derives data model, APIs and core logic from the AC; checks what existing code can be reused first; confirms key decisions (new dependencies, trade-offs) with you; ends with an AC coverage table | `specs/features/{feature}/技术方案.md` |
 | `feature-task-planning` | Tech lead | Splits into atomic tasks by **vertical slice** (user behaviour); each task gets a plain-language summary, executable verification criteria and a type label (A logic / B UI / C schema); tests are not separate tasks | `specs/features/{feature}/任务规划.md` |
-| `feature-implementation` | TDD developer | Executes by task type: A goes RED→GREEN→REFACTOR, B gets component tests + browser verification, C gets migration + query verification. After each task it **loads the `feature-review` skill**; at phase end it emits a **convergence verdict** | Code + tests + `reports/阶段N_完成报告.md` |
-| `feature-review` | Code reviewer | The **review gate**, loaded by implementation after each task, or triggered manually ("review Task-03"). Evidence-based: runs the tests itself, checks the diff for scope creep, compares against standards, returns PASS / FAIL / unverified plus a remediation list | Verdict (recorded in the dev log in a fixed format) |
+| `feature-implementation` | TDD orchestrator | The main session orchestrates instead of writing code: each task is packed into a **task card and dispatched to a subagent** (serial dispatch, only a structured receipt comes back, so context does not balloon), then goes through the `feature-review` **gate**; once every task is done the main session personally runs the **closing self-check** (full regression + AC reconciliation + bookkeeping audit) before emitting a **convergence verdict**. Falls back to main-session execution where no subagent tool exists | Code + tests + `reports/阶段N_完成报告.md` |
+| `feature-review` | Code reviewer | The **review gate** — implementation **dispatches a read-only review subagent** that loads this skill after each task (the per-task commit is the primary evidence); can also be triggered manually ("review Task-03"). Evidence-based: runs the tests itself, checks the diff for scope creep, compares against standards, returns PASS / FAIL / unverified plus a remediation list; FAILs feed the mistake notebook | Verdict (recorded in the dev log in a fixed format) |
 | `feature-evolution` | Product architect | The **change manager**, two modes: (1) a change to an existing feature → impact analysis (including cross-feature checks) → a change folder, canonical docs untouched; (2) "archive CR-XXX" → verify completion, merge back into the canonical docs, append a change log | `specs/changes/CR-XXX-{slug}/` (change proposal / change tasks / merge checklist) |
 
 ### Layer 3 — Universal: on demand (1)
 
 | Skill | Role | What it does | Output |
 |---|---|---|---|
-| `bugfix-workflow` | Debugger | Decides first whether it is really a bug (behaviour diverging from design); quick fix for simple cases, and the hard rule "no reproduction, no code changes" for complex ones; ends with a three-state verdict: verified / partial / failed | Report under `docs/BUG修复文档/` |
+| `bugfix-workflow` | Debug orchestrator | Decides first whether it is really a bug (behaviour diverging from design); quick fix for simple cases; complex cases follow the hard rule "no reproduction, no code changes" and are **executed by an investigation subagent** (the main session only receives the receipt, so context does not balloon); the fix passes the **feature-review gate** before the three-state verdict: verified / partial / failed | Report under `docs/BUG修复文档/` |
 
 ### The two mechanism files (not skills, but every skill obeys them)
 
@@ -90,11 +90,11 @@ Each output feeds the next step. Spend two minutes reviewing each document — m
 ③ /feature-task-planning search
       ↓ produces 任务规划.md (slices + tasks + verification criteria + type labels)
 ④ /feature-implementation finish phase 1 of the search feature
-      ↓ per task: classify → verify → acceptance → review → tick off
-      ↓ phase end: convergence verdict (Converged / Needs Work) + phase report + dev log
+      ↓ per task: build task card → subagent executes → receipt check → review → tick off
+      ↓ phase close: main-session self-check (full regression + AC reconciliation) → convergence verdict + phase report + dev log
 ```
 
-Suggestion: run ①②③ in one session (their context is tightly coupled); for ④ consider a fresh session per task (the skill forces re-reading the docs, so context is never lost). Review is triggered by implementation after each task, and the dev log is appended by each skill in a fixed format — you don't maintain either by hand.
+Suggestion: run ①②③ in one session (their context is tightly coupled); for ④, an environment with subagent tools can work through the whole feature phase by phase in one session (you still trigger each phase by name) — tasks execute inside subagents, so main-session context does not balloon. Without subagent tools it falls back to main-session execution; in that case consider one session per phase. Review is triggered by implementation after each task, and the dev log is appended by each skill in a fixed format — you don't maintain either by hand.
 
 ### Step 3 — Change a delivered feature: the three-step change flow
 
@@ -136,6 +136,7 @@ your-project/
 ### Practical advice
 
 - **One thing at a time**: one feature requirement per message; don't "also change X while you're at it".
+- **Never run two execution windows for the same feature**: docs are the only shared state, and two windows rewriting whole files will clobber each other (see the concurrency rule in CONSTITUTION).
 - **Invoke the skill explicitly**: name it yourself (`/feature-xxx`, or "use feature-xxx", depending on your tool) — more reliable than dropping a vague description and waiting for a guess.
 - **Never ignore Needs Work**: when a phase report says Needs Work, its difference list is your next to-do.
 
@@ -155,8 +156,11 @@ your-project/
 | 8 | Fixed broken references (dead links, bad numbering, path typos) | Leftovers from the V3 rewrite |
 | 9 | Roadmap slice seeds + unified project-level skills | The project level was still V2 style |
 | 10 | Guard escalation exit | The guard was fighting the user |
+| 11 | Serial subagent task execution + closing self-check gate | Main session writing code itself ballooned context with code volume; work simply stopped when tasks finished, with nobody checking the whole |
+| 12 | Upstream doc-change propagation (principle 7) + roadmap completion write-back + one-commit-per-task gate | Changing the stack left every downstream doc stale with no owner; the roadmap stayed outdated after features shipped; review lost clean diff evidence |
+| 13 | bugfix review gate + investigation subagents + mistake-notebook loop | Bug fixes skipped review entirely; investigation churn ballooned the main session; the mistake notebook was defined but never written |
 
-> **Direction not adopted — parallel execution**: the bottleneck in this workflow is verification and integration (a single browser walkthrough often surfaces nearly ten bugs), while the tasks that could run in parallel mostly share locale files, routes and menu config — running them concurrently would leave `feature-review` without a clean diff as evidence. Worth revisiting once "one commit per task" is the norm.
+> **Subagent execution adopted; parallelism still not**: task execution and review are dispatched to subagents **serially** (one task at a time), so the main session only receives structured receipts and context no longer balloons with code volume. **Parallel** dispatch remains off the table — the bottleneck is verification and integration (a single browser walkthrough often surfaces nearly ten bugs), while the tasks that could run in parallel mostly share locale files, routes and menu config — running them concurrently would leave `feature-review` without a clean diff as evidence. Worth revisiting once "one commit per task" is the norm.
 
 ## Migrating an existing project (one-off, two minutes)
 
