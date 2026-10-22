@@ -102,7 +102,7 @@
       "layer": "feature",
       "kind": "change",
       "path": "skills/feature/feature-evolution",
-      "outputs": ["specs/changes/CR-{编号}-{slug}/"]
+      "outputs": ["specs/changes/{功能名}/CR-{编号}-{slug}/"]
     },
     {
       "name": "bugfix-workflow",

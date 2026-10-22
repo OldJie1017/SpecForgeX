@@ -31,7 +31,7 @@ A documentation-driven AI development workflow, rebuilt from [SpecForge](https:/
 | `feature-task-planning` | Tech lead | Splits into atomic tasks by **vertical slice** (user behaviour); each task gets a plain-language summary, executable verification criteria and a type label (A logic / B UI / C schema); tests are not separate tasks | `specs/features/{feature}/任务规划.md` |
 | `feature-implementation` | TDD orchestrator | The main session orchestrates instead of writing code: each task is packed into a **task card and dispatched to a subagent** (serial dispatch, only a structured receipt comes back, so context does not balloon), then goes through the `feature-review` **gate**; once every task is done the main session personally runs the **closing self-check** (full regression + AC reconciliation + bookkeeping audit) before emitting a **convergence verdict**. Falls back to main-session execution where no subagent tool exists | Code + tests + `reports/阶段N_完成报告.md` |
 | `feature-review` | Code reviewer | The **review gate** — implementation **dispatches a read-only review subagent** that loads this skill after each task (the per-task commit is the primary evidence); can also be triggered manually ("review Task-03"). Evidence-based: runs the tests itself, checks the diff for scope creep, compares against standards, returns PASS / FAIL / unverified plus a remediation list; FAILs feed the mistake notebook | Verdict (recorded in the dev log in a fixed format) |
-| `feature-evolution` | Product architect | The **change manager**, two modes: (1) a change to an existing feature → impact analysis (including cross-feature checks) → a change folder, canonical docs untouched; (2) "archive CR-XXX" → verify completion, merge back into the canonical docs, append a change log | `specs/changes/CR-XXX-{slug}/` (change proposal / change tasks / merge checklist) |
+| `feature-evolution` | Product architect | The **change manager**, two modes: (1) a change to an existing feature → impact analysis (including cross-feature checks) → a change folder, canonical docs untouched; (2) "archive CR-XXX" → verify completion, merge back into the canonical docs, append a change log | `specs/changes/{feature}/CR-XXX-{slug}/` (change proposal / change tasks / merge checklist; CR numbers are per-feature, so parallel features never collide) |
 
 ### Layer 3 — Universal: on demand (1)
 
@@ -100,12 +100,12 @@ Suggestion: run ①②③ in one session (their context is tightly coupled); for
 
 ```
 ① /feature-evolution add search history to search
-      ↓ impact analysis (including cross-feature checks) → specs/changes/CR-001-搜索历史/
+      ↓ impact analysis (including cross-feature checks) → specs/changes/搜索功能/CR-001-搜索历史/
       ↓ canonical docs untouched! the change lives in its own folder
 ② /feature-implementation finish the change tasks for CR-001
       ↓ executes 变更任务.md, same flow as before (review included)
 ③ /feature-evolution archive CR-001
-      ↓ verifies everything is done → merges back per 归并清单.md → moves into changes/archive/
+      ↓ verifies everything is done → merges back per 归并清单.md → moves into changes/archive/{feature}/
 ```
 
 Documentation drift (code changed, docs forgotten) dies here: the canonical docs are only touched at archive time, and the merge checklist decides exactly what changes. If a change exceeds ~70% of the original feature, it will push you towards a new feature instead of forcing it in.
@@ -129,7 +129,7 @@ your-project/
 │   │   ├── 需求.md / 技术方案.md / 任务规划.md     ← the canonical trio
 │   │   ├── 开发日志.md                         ← append-only dev log
 │   │   └── reports/                           ← phase reports + acceptance screenshots
-│   └── changes/                               ← in-flight changes + archive/
+│   └── changes/{feature}/CR-{nn}-{slug}/     ← in-flight changes (numbered per feature) + archive/{feature}/
 └── docs/开发记录/ (init log, escalation log), docs/BUG修复文档/
 ```
 

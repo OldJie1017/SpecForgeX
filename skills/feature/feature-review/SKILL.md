@@ -14,7 +14,7 @@ description: "任务级代码审查关卡（review gate）。审查单个开发�
 # 前置条件
 
 - `specs/CONSTITUTION.md` 按协议加载（必须）
-- 当前功能的任务规划（`specs/features/{功能名}/任务规划.md` 或变更任务的 `specs/changes/CR-*/变更任务.md`）——拿到被审任务的**验证标准**、**声明的涉及文件**、**对应 AC**
+- 当前功能的任务规划（`specs/features/{功能名}/任务规划.md` 或变更任务的 `specs/changes/{功能名}/CR-*/变更任务.md`）——拿到被审任务的**验证标准**、**声明的涉及文件**、**对应 AC**
 - `specs/features/{功能名}/需求.md`——拿到 AC 完整描述
 - `specs/开发规范.md`（若存在）——合规检查依据
 - `specs/TOOLCHAIN.md`——测试与检查命令
