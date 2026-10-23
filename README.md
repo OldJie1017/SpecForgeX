@@ -26,7 +26,7 @@
 
 | Skill | 角色 | 干什么 | 产出 |
 |---|---|---|---|
-| `feature-requirements-clarification` | 产品搭档 | 自然对话挖透单个功能的需求（场景/流程/边界/规则/范围/质量六维），产出 Given-When-Then 格式的验收标准（AC）；用户已把需求写清楚时走**快车道**（AC 草稿 + 假设清单），非功能指标只在确有可度量值时入 AC——AC 质量决定后面每一步 | `specs/features/{功能名}/需求.md` + 初始化 `开发日志.md` |
+| `feature-requirements-clarification` | 产品搭档 | 自然对话挖透单个功能的需求（场景/流程/边界/规则/范围/质量六维），产出 Given-When-Then 格式的验收标准（AC）；用户已把需求写清楚时走**快车道**（AC 草稿 + 假设清单，每条带推荐默认），非功能指标只在确有可度量值时入 AC——AC 质量决定后面每一步 | `specs/features/{功能名}/需求.md` + 初始化 `开发日志.md` |
 | `feature-tech-design` | 技术搭档 | 从 AC 反推数据模型、接口、核心逻辑；先看现有代码能复用什么；关键决策（新依赖、多方案取舍）必须和你确认；末尾附 AC 覆盖总表防遗漏 | `specs/features/{功能名}/技术方案.md` |
 | `feature-task-planning` | 技术主管 | 按垂直切片（用户行为）拆原子任务，每个任务带通俗解释、可执行的验证标准、类型标注（A 纯逻辑 / B UI / C schema）；测试不单列任务，融入执行 | `specs/features/{功能名}/任务规划.md` |
 | `feature-implementation` | TDD 编排者 | 主会话只编排不写码：每任务组装**任务卡派给子代理执行**（串行派发，只收结构化回执，上下文不随代码量膨胀），逐任务过 `feature-review` **审查**；全部任务完成后主会话亲自**收尾自检**（全量回归 + AC 对账 + 记账核对），过了才出**收敛判定**。无子代理工具的环境自动降级为主会话执行 | 代码 + 测试 + `reports/阶段N_完成报告.md` |
@@ -173,7 +173,7 @@ node scripts/install-skills.mjs --dry-run             # 先看会做什么，不
 - **来源**：Fork of [MingYuePop/SpecForge](https://github.com/MingYuePop/SpecForge)，仓库名改为 SpecForgeX。内容以 V3 基线 `5d2c453`（2026-03-22）为起点；历史已压成单一初始提交，与上游提交历史不重合，逐处对照请按该基线比对。
 - **继承与新增**：Skill 名与"文档驱动 / 阶段分离 / AC 贯穿"方法论继承自上游；审查关卡、变更文件夹与归档、收敛判定、TDD 分类、manifest 与自检脚本为本仓库新增。
 - **授权**：上游**没有 LICENSE 文件**（默认"保留所有权利"），本仓库也未另设 LICENSE。作为 GitHub Fork，在平台内查看、fork、克隆是被允许的；**商用、分发到 GitHub 之外或再许可，需先取得上游授权**。上游若补上 MIT（其 README 明确欢迎 PR），本仓库会跟随同一许可。
-- **设计参考**：[obra/superpowers](https://github.com/obra/superpowers)（任务后审查、子代理执行）、[github/spec-kit](https://github.com/github/spec-kit)（constitution、收敛循环、三态裁定）、[Fission-AI/OpenSpec](https://github.com/Fission-AI/OpenSpec)（变更文件夹 + archive 归并）、[Trellis](https://docs.trytrellis.app)（按任务注入 spec、开发日志）。
+- **设计参考**：[obra/superpowers](https://github.com/obra/superpowers)（任务后审查、子代理执行）、[github/spec-kit](https://github.com/github/spec-kit)（constitution、收敛循环、三态裁定）、[Fission-AI/OpenSpec](https://github.com/Fission-AI/OpenSpec)（变更文件夹 + archive 归并）、[Trellis](https://docs.trytrellis.app)（按任务注入 spec、开发日志）、[mattpocock/skills](https://github.com/mattpocock/skills)（决策拷问：设计树 / 待定边界 / 每题带推荐答案）。
 
 ## 自检
 
