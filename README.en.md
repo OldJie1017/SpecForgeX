@@ -129,7 +129,7 @@ your-project/
 │   ├── features/{feature}/                    ← one directory per feature
 │   │   ├── 需求.md / 技术方案.md / 任务规划.md     ← the canonical trio
 │   │   ├── 开发日志.md                         ← append-only dev log
-│   │   └── reports/                           ← phase reports, context packs, evidence packs/screenshots
+│   │   └── reports/                           ← phase reports, context packs, evidence packs (raw evidence cleaned before commit)
 │   └── changes/{feature}/CR-{nn}-{slug}/     ← in-flight changes (numbered per feature) + archive/{feature}/
 └── docs/开发记录/ (init log, escalation log), docs/BUG修复文档/
 ```
