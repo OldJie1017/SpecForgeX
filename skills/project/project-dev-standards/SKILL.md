@@ -87,6 +87,7 @@ description: "项目启动第 5/7 步。技术栈确定后使用：制定可执�
   - scope 列表（从项目的 features 模块中提取）
   - subject 书写规则
   - body 和 footer 用法
+  - **提交信息简短原则**（subject 一行 ≤ 50 字、body 最多 2~3 行、禁止贴文件清单/测试输出/diff）
   - 2-3 个完整的提交信息示例
 - 合并策略（Squash Merge / Rebase 等）
 
