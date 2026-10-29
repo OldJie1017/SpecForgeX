@@ -41,7 +41,7 @@ description: "功能编码实现（单会话轻量模式，TDD 驱动）。主�
 - `specs/features/{功能名}/技术方案.md`
 - `specs/features/{功能名}/任务规划.md`
 
-变更任务读 `specs/changes/{功能名}/CR-{编号}-{slug}/` 下的变更提案与变更任务；正典三件套按实际存在读取，**最低要求是需求文档存在**。
+变更任务读 `specs/changes/{功能名}/CR-{编号}-{中文slug}/` 下的变更提案与变更任务；正典三件套按实际存在读取，**最低要求是需求文档存在**。
 
 同时必读 `specs/CONSTITUTION.md` 与 `specs/TOOLCHAIN.md`：测试命令与验收工具以 TOOLCHAIN 为准；某项没配置就先问用户并回写，再继续。
 

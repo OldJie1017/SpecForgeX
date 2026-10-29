@@ -31,7 +31,7 @@ A documentation-driven AI development workflow, rebuilt from [SpecForge](https:/
 | `feature-task-planning` | Tech lead | Splits into atomic tasks by **vertical slice** (user behaviour); each task gets a plain-language summary, executable verification criteria and a type label (A logic / B UI / C schema); tests are not separate tasks | `specs/features/{feature}/任务规划.md` |
 | `feature-implementation` | TDD implementer | **Single-session lite mode**: the main session does the work itself — no subagents, no context pack, no evidence pack. Reads the three canonical docs once → per task TDD (RED→GREEN) + targeted acceptance + one dev-log line → at phase end **one full-suite run** + **four checks** (AC coverage / scope creep / tests / doc sync) + **one self-review** via the feature-review dimensions → **one commit**. Suited to ≤4 tasks in one module; split high-risk phases (schema, auth, concurrency, pre-release) or hand the diff to the user for a spot check | Code + tests + `reports/阶段N_完成报告.md` |
 | `feature-review` | Code reviewer | The **review gate**: by default the implementer **self-reviews once at phase end** (an independent read-only reviewer session is optional where subagents exist). Inputs are the stage diff, the dev log and the task plan's verification criteria; four dimensions, then one stage-level PASS / FAIL / unverified verdict plus a remediation list grouped by task, with at most one targeted re-run; the verdict is recorded in the dev log in a fixed format | Stage verdict (recorded in the dev log) |
-| `feature-evolution` | Product architect | The **change manager**, two modes: (1) a change to an existing feature → impact analysis (including cross-feature checks) → a change folder, canonical docs untouched; (2) "archive CR-XXX" → verify completion, merge back into the canonical docs, append a change log | `specs/changes/{feature}/CR-XXX-{slug}/` (change proposal / change tasks / merge checklist; CR numbers are per-feature, so parallel features never collide) |
+| `feature-evolution` | Product architect | The **change manager**, two modes: (1) a change to an existing feature → impact analysis (including cross-feature checks) → a change folder, canonical docs untouched; (2) "archive CR-XXX" → verify completion, merge back into the canonical docs, append a change log | `specs/changes/{feature}/CR-001-单门店组织过滤/` (change proposal / change tasks / merge checklist; CR numbers are per-feature, and the directory slug is a Chinese phrase from the change title) |
 
 ### Layer 3 — Universal: on demand (1)
 
@@ -130,7 +130,7 @@ your-project/
 │   │   ├── 需求.md / 技术方案.md / 任务规划.md     ← the canonical trio
 │   │   ├── 开发日志.md                         ← append-only dev log
 │   │   └── reports/                           ← phase completion reports (lite mode creates no context pack or evidence pack)
-│   └── changes/{feature}/CR-{nn}-{slug}/     ← in-flight changes (numbered per feature) + archive/{feature}/
+│   └── changes/{feature}/CR-{nn}-{中文slug}/   ← in-flight changes (numbered per feature, Chinese slug) + archive/{feature}/
 └── docs/开发记录/ (init log, escalation log), docs/BUG修复文档/
 ```
 
@@ -180,6 +180,6 @@ your-project/
 
 ## Self-check
 
-After editing a skill, run `npm test` (the same as `node scripts/check-skills.mjs`, Node 18+). It checks front-matter, the manifest (paths / layer / kind / unique names / no duplicate step within a layer), asset references, leftover placeholders, the mechanism-file copies (line endings are normalised first, so CRLF cannot produce a false failure), and — for both READMEs — the heading structure, full skill name coverage, and the declared skill count against the manifest. It tells you exactly what to fix.
+After editing a skill, run `npm test` (the same as `node scripts/check-skills.mjs`, Node 18+). It checks front-matter, the manifest (paths / layer / kind / unique names / no duplicate step within a layer), asset references, leftover placeholders, CR change-directory naming (the placeholder must be `{中文slug}`, and examples must not use English kebab-case), the mechanism-file copies (line endings are normalised first, so CRLF cannot produce a false failure), and — for both READMEs — the heading structure, full skill name coverage, and the declared skill count against the manifest. It tells you exactly what to fix.
 
 The same checks run automatically in GitHub Actions on push and pull request (Node 18 / 20 / 22), plus four smoke tests: install dry-run, real install, install idempotency, and byte-identical mechanism files in the installed output — so a forgotten manual run cannot push an inconsistency into `main`.

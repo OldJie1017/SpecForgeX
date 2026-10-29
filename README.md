@@ -31,7 +31,7 @@
 | `feature-task-planning` | 技术主管 | 按垂直切片（用户行为）拆原子任务，每个任务带通俗解释、可执行的验证标准、类型标注（A 纯逻辑 / B UI / C schema）；测试不单列任务，融入执行 | `specs/features/{功能名}/任务规划.md` |
 | `feature-implementation` | TDD 实现者 | **单会话轻量模式**：主会话独立完成，不派子代理、不建上下文包与证据包。读三件套一次 → 逐任务 TDD（RED→GREEN）+ 定向验收 + 开发日志一行 → 阶段末**一次全量** + **四项自检**（AC / 越界 / 测试 / 文档）+ 按 feature-review 四维度**自审一次** → 一个提交。适合 ≤4 任务、单模块改动；schema / 权限 / 并发 / 上线前等高风险阶段建议拆小或把 diff 交给用户抽查 | 代码 + 测试 + `reports/阶段N_完成报告.md` |
 | `feature-review` | 代码审查员 | **审查关卡**：默认由实现会话在**阶段末自审一次**（有子代理时可派只读审查会话独立裁）。输入是阶段起点以来的 `git diff` + 开发日志 + 任务规划的验证标准；四维度核对后出阶段级 PASS / FAIL / 待验证 + 按任务分组的整改清单，定向复跑只做 1 条；裁定按固定格式记入开发日志 | 阶段审查裁定（记入 开发日志） |
-| `feature-evolution` | 产品架构师 | **变更管家**，两种用法：① 对已有功能提修改 → 影响分析（含跨功能检查）→ 生成变更文件夹，正典不动；② "归档 CR-XXX" → 核验完成后把变更归并回正典并追加变更日志 | `specs/changes/{功能名}/CR-XXX-{slug}/`（变更提案 / 变更任务 / 归并清单；CR 编号功能内自增，不同功能并行不撞号） |
+| `feature-evolution` | 产品架构师 | **变更管家**，两种用法：① 对已有功能提修改 → 影响分析（含跨功能检查）→ 生成变更文件夹，正典不动；② "归档 CR-XXX" → 核验完成后把变更归并回正典并追加变更日志 | `specs/changes/{功能名}/CR-001-单门店组织过滤/`（变更提案 / 变更任务 / 归并清单；CR 编号功能内自增，目录 slug 用中文短语） |
 
 ### 第三层：通用 —— 随叫随到（1 个）
 
@@ -130,7 +130,7 @@ node scripts/install-skills.mjs --dry-run             # 先看会做什么，不
 │   │   ├── 需求.md / 技术方案.md / 任务规划.md   ← 正典三件套
 │   │   ├── 开发日志.md                        ← 时间序开发日志
 │   │   └── reports/                          ← 阶段完成报告（轻量模式不产上下文包与证据包）
-│   └── changes/{功能名}/CR-{编号}-{slug}/     ← 进行中变更（编号功能内自增）+ archive/{功能名}/
+│   └── changes/{功能名}/CR-{编号}-{中文slug}/   ← 进行中变更（编号功能内自增，slug 用中文短语）+ archive/{功能名}/
 └── docs/开发记录/（初始化记录、越级记录）、docs/BUG修复文档/
 ```
 
@@ -180,6 +180,6 @@ node scripts/install-skills.mjs --dry-run             # 先看会做什么，不
 
 ## 自检
 
-改完 skill 后跑 `npm test`（等价于 `node scripts/check-skills.mjs`，Node 18+）。它校验 front-matter、manifest（路径 / layer / kind / name 唯一 / 同层 step 不重号）、assets 引用、占位符残留、机制文件副本（比较前归一化行尾，避免 CRLF 造成假失败），以及双语 README 的章节结构、skill 名单与声明的数量是否和 manifest 对得上。有问题直接告诉你要改哪。
+改完 skill 后跑 `npm test`（等价于 `node scripts/check-skills.mjs`，Node 18+）。它校验 front-matter、manifest（路径 / layer / kind / name 唯一 / 同层 step 不重号）、assets 引用、占位符残留、CR 变更目录命名（占位符必须是 `{中文slug}`，示例不得用英文 kebab-case）、机制文件副本（比较前归一化行尾，避免 CRLF 造成假失败），以及双语 README 的章节结构、skill 名单与声明的数量是否和 manifest 对得上。有问题直接告诉你要改哪。
 
 同一套检查在 push / PR 时由 GitHub Actions 自动跑（Node 18 / 20 / 22 三档），并额外冒烟四项：安装脚本演练、真实安装、重复安装幂等、安装产物里的机制文件与 `specs/` 逐字一致——所以忘记手动跑也不会把不一致推进主干。

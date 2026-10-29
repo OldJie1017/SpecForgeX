@@ -20,12 +20,12 @@
 ---
 ## 变更日志 (Change Log)
 ### CR-{{编号}}: {{变更标题}} ({{YYYY-MM-DD}})
-**类型**: {{微调/扩展/重构}}  **详情**: specs/changes/archive/{{功能名}}/{{日期}}-CR{{编号}}-{{slug}}/
+**类型**: {{微调/扩展/重构}}  **详情**: specs/changes/archive/{{功能名}}/{{日期}}-CR-{{编号}}-{{中文slug}}/
 ```
 
 ## 归档动作
 
 1. 核验 变更任务.md 完成状态全勾、review 全 PASS
 2. 执行上表归并
-3. 变更文件夹移入 `specs/changes/archive/{{功能名}}/{{YYYYMMDD}}-CR{{编号}}-{{slug}}/`
+3. 变更文件夹移入 `specs/changes/archive/{{功能名}}/{{YYYYMMDD}}-CR-{{编号}}-{{中文slug}}/`（slug 沿用原目录名，不改写）
 4. 开发日志.md 追加归档记录

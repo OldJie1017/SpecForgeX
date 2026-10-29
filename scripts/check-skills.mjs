@@ -13,6 +13,7 @@
  *   5. SKILL.md 里不出现相对 skill 目录的 specs/ 或 docs/ 链接（路径基准见 CONSTITUTION 第四节）
  *   6. specs/ 下的两份机制文件与技能包里的分发副本逐字一致（比较前归一化行尾）
  *   7. 中英 README 章节结构一致、都覆盖全部 skill 名单，且声明的 skill 数量与 manifest 相符
+ *   8. CR 变更目录命名：占位符必须是 {中文slug}，示例不得用英文 kebab-case（CONSTITUTION 命名约定）
  */
 import { readFileSync, existsSync, readdirSync } from 'node:fs';
 import { join, dirname, posix } from 'node:path';
@@ -223,6 +224,40 @@ if (has(README_ZH) && has(README_EN)) {
   }
 } else if (has(README_ZH) && !has(README_EN)) {
   warn('没有 README.en.md，中文版的结构未被英文版对应');
+}
+
+// ---------- 8. CR 变更目录命名：slug 必须是中文短语 ----------
+// 目录名是全项目 grep 的入口，写成英文 kebab-case 后和中文文档对不上；这里把约定钉死在自检里。
+const CR_DOCS = [
+  'specs/CONSTITUTION.md',
+  'README.md',
+  'README.en.md',
+  ...found.map((s) => posix.join(s.path, 'SKILL.md')),
+  ...found.flatMap((s) => {
+    const dir = join(s.dir, 'assets');
+    if (!existsSync(dir)) return [];
+    return readdirSync(dir)
+      .filter((f) => f.endsWith('.md'))
+      .map((f) => posix.join(s.path, 'assets', f));
+  }),
+];
+
+const CR_PLACEHOLDER_SLUG = /CR-(?:\{编号\}|\{nn\}|XXX|\d{3})-\{slug\}/;
+const CR_ENGLISH_SLUG = /CR-\d{3}-[A-Za-z][A-Za-z0-9]*(?:-[A-Za-z0-9]+)*/;
+
+for (const p of CR_DOCS) {
+  if (!has(p)) continue; // 机制文件缺失已由第 6 项报告
+  readNormalized(p)
+    .split('\n')
+    .forEach((line, i) => {
+      if (CR_PLACEHOLDER_SLUG.test(line)) {
+        fail(`${p}:${i + 1} 的 CR 目录占位符缺“中文”标记——写成 {中文slug}，否则模型会把 slug 自译成英文`);
+      }
+      const m = line.match(CR_ENGLISH_SLUG);
+      if (m) {
+        fail(`${p}:${i + 1} 的 CR 目录示例“${m[0]}”用了英文 slug——按 CONSTITUTION 命名约定应写中文短语，如 CR-001-单门店组织过滤`);
+      }
+    });
 }
 
 // ---------- 输出 ----------
